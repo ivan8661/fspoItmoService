@@ -1,0 +1,24 @@
+version: "3"
+services:
+  fspoitmo:
+    image: fspoitmo
+    restart: on-failure
+    environment:
+      - WAIT_HOSTS=mysql:3307
+      - WAIT_HOSTS_TIMEOUT=500
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+      - SPRING_APPLICATION_NAME=fspoitmo
+    ports:
+      - "8071:8071"
+    networks:
+      - common_network
+      - eureka_network
+
+networks:
+  common_network:
+    name: common_network
+    external: true
+  eureka_network:
+    name: eureka_network
+    external: true
