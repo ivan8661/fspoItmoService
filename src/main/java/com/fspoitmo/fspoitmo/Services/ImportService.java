@@ -147,7 +147,7 @@ public class ImportService {
                 FSPOITMOUtils.getFSPOday(weekDay.optString("weekday")),
                 lesson.optString("place"),
                 "practice",
-                new Subject(DigestUtils.sha256Hex(lesson.optString("name") + "ФСПО_ПРЕДМЕТЫ"), lesson.optString("name"), "228"),
+                new Subject(DigestUtils.sha256Hex(lesson.getString("name")+"fspo_itmo_subjects"), lesson.optString("name"), "228"),,
                 professorsRepository.findByName(nsp),
                 Collections.singleton(pupilGroupRepository.findPupilGroupByName(pupilGroup.getName())),
                 week));
