@@ -1,6 +1,7 @@
 package com.fspoitmo.fspoitmo.Controllers;
 
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
+import com.fspoitmo.fspoitmo.Exceptions.UserExceptionType;
 import com.fspoitmo.fspoitmo.Services.ImportService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ public class UtilController {
     public ResponseEntity<String> getImport(@RequestBody String password) throws JSONException, UserException {
         JSONObject passwordObject = new JSONObject(password);
         if(!passwordObject.has("password")) {
-            throw new UserException(403, "forbidden", "ты чо сделать пытаешься, а?", "");
+            throw new UserException(UserExceptionType.FORBIDDEN, null, null);
         } else {
             importService.updateFSPOTeachers();
             importService.updateFSPOGroups();

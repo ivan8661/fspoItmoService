@@ -2,10 +2,13 @@ package com.fspoitmo.fspoitmo.Services;
 
 
 import GetGraphQL.QueryParametersBuilder;
+import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.ListAnswer;
 import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.PupilGroup;
 import com.fspoitmo.fspoitmo.Entities.Repositories.PupilGroupRepository;
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
+import com.fspoitmo.fspoitmo.Exceptions.UserExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -21,12 +24,13 @@ public class GroupService {
     private PupilGroupRepository pupilGroupRepository;
 
 
-    public List<PupilGroup> getGroups(Map<String, String> params) throws NoSuchFieldException {
+    public ListAnswer<PupilGroup> getGroups(Map<String, String> params) throws NoSuchFieldException {
 
         QueryParametersBuilder<PupilGroup> queryBuilder = new QueryParametersBuilder<>(params, PupilGroup.class);
         Specification<PupilGroup> spc = queryBuilder.getSpecification(null);
         Pageable pageable = queryBuilder.getPage();
-        return pupilGroupRepository.findAll(spc, pageable).getContent();
+        Page page = pupilGroupRepository.findAll(spc, pageable);
+        return new ListAnswer<>(page);
     }
 
     public PupilGroup getGroup(String id) throws UserException {
@@ -34,7 +38,7 @@ public class GroupService {
         if(group.isPresent()) {
             return group.get();
         } else {
-            throw new UserException(404, "not_found", "group doesn't exist", "");
+            throw new UserException(UserExceptionType.OBJECT_NOT_FOUND);
         }
     }
 

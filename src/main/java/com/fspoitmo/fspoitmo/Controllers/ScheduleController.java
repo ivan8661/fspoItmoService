@@ -1,6 +1,7 @@
 package com.fspoitmo.fspoitmo.Controllers;
 
 import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.Lesson;
+import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.ListAnswer;
 import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.Subject;
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
 import com.fspoitmo.fspoitmo.Services.ScheduleService;
@@ -24,7 +25,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedule/{scheduleUserId}")
-    public ResponseEntity<List<Lesson>> lessons(@PathVariable("scheduleUserId") String scheduleUserId) throws UserException {
+    public ResponseEntity<ListAnswer<Lesson>> lessons(@PathVariable("scheduleUserId") String scheduleUserId) throws UserException {
         return ResponseEntity.ok().body(scheduleService.getLessons(scheduleUserId));
     }
 

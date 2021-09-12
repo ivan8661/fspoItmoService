@@ -1,6 +1,7 @@
 package com.fspoitmo.fspoitmo.Services;
 
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
+import com.fspoitmo.fspoitmo.Exceptions.UserExceptionType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -87,7 +88,7 @@ public class ParseService {
         entity = new HttpEntity(userData, headers);
         ResponseEntity<String> mainPage = new RestTemplate().exchange("https://ifspo.ifmo.ru/profile", HttpMethod.GET, entity, String.class);
         if(mainPage.toString().contains("Disallowed Key Characters"))
-            throw new UserException(406, "validation_error", "неверный логин или пароль", "");
+            throw new UserException(UserExceptionType.VALIDATION_ERROR);
 
         System.out.println("итого:" + mainPage.getBody());
         return mainPage.getBody();
