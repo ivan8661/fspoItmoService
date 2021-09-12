@@ -1,7 +1,7 @@
 version: "3"
 services:
   fspoitmo:
-    image: fspoitmo
+    image: schedapp/fspoitmo:latest
     restart: on-failure
     environment:
       - WAIT_HOSTS=mysql:3307
