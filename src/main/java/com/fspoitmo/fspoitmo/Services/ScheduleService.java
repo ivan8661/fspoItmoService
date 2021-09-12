@@ -1,14 +1,12 @@
 package com.fspoitmo.fspoitmo.Services;
 
-import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.Lesson;
-import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.Professor;
-import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.PupilGroup;
-import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.Subject;
+import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.*;
 import com.fspoitmo.fspoitmo.Entities.Repositories.LessonRepository;
 import com.fspoitmo.fspoitmo.Entities.Repositories.ProfessorsRepository;
 import com.fspoitmo.fspoitmo.Entities.Repositories.PupilGroupRepository;
 import com.fspoitmo.fspoitmo.Entities.Repositories.SubjectRepository;
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
+import com.fspoitmo.fspoitmo.Exceptions.UserExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,18 +35,20 @@ public class ScheduleService {
         this.subjectRepository = subjectRepository;
     }
 
-    public List<Lesson> getLessons(String scheduleUserId) throws UserException {
+    public ListAnswer<Lesson> getLessons(String scheduleUserId) throws UserException {
 
         Optional<PupilGroup> pupilGroup = pupilGroupRepository.findById(scheduleUserId);
         Optional<Professor> professor = professorsRepository.findById(scheduleUserId);
 
         if(pupilGroup.isPresent()){
-            return lessonRepository.getAllByGroups(pupilGroup.get());
+            List<Lesson> lessons = lessonRepository.getAllByGroups(pupilGroup.get());
+            return new ListAnswer(lessons, lessons.size());
         }
         if(professor.isPresent()){
-            return lessonRepository.getAllByProfessors(professor.get());
+            List<Lesson> lessons = lessonRepository.getAllByProfessors(professor.get());
+            return new ListAnswer(lessons, lessons.size());
         }
-        throw new UserException(404, "not_found", "ScheduleUser Doesn't exist!", "");
+        throw new UserException(UserExceptionType.OBJECT_NOT_FOUND);
     }
 
     public Lesson getLesson(String lessonId) throws UserException {
@@ -56,7 +56,7 @@ public class ScheduleService {
         if(lesson.isPresent()) {
             return lesson.get();
         } else {
-            throw new UserException(404, "not_found", "Lesson doesn't exist!", " ");
+            throw new UserException(UserExceptionType.OBJECT_NOT_FOUND);
         }
     }
 
@@ -65,7 +65,7 @@ public class ScheduleService {
         if(subject.isPresent()) {
             return subject.get();
         } else {
-            throw new UserException(404, "not_found", "Subject doesn't exist!", " ");
+            throw new UserException(UserExceptionType.OBJECT_NOT_FOUND);
         }
     }
 

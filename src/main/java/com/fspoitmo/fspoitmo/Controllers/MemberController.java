@@ -1,5 +1,6 @@
 package com.fspoitmo.fspoitmo.Controllers;
 
+import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.ListAnswer;
 import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.Professor;
 import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.PupilGroup;
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
@@ -27,7 +28,7 @@ public class MemberController {
     }
 
     @GetMapping("/professors")
-    public ResponseEntity<List<Professor>> professors(@RequestParam Map<String, String> params) throws NoSuchFieldException {
+    public ResponseEntity<ListAnswer<Professor>> professors(@RequestParam Map<String, String> params) throws NoSuchFieldException {
         return ResponseEntity.ok().body(professorService.getProfessors(params));
     }
 
@@ -37,7 +38,7 @@ public class MemberController {
     }
 
     @GetMapping("/groups")
-    public ResponseEntity<List<PupilGroup>> groups(@RequestParam Map<String, String> params) throws NoSuchFieldException {
+    public ResponseEntity<ListAnswer<PupilGroup>> groups(@RequestParam Map<String, String> params) throws NoSuchFieldException {
         return ResponseEntity.ok().body(groupService.getGroups(params));
     }
 
