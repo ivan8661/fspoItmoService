@@ -262,3 +262,10 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/java,macos,windows,linux,maven,xcode,intellij
+/.idea/compiler.xml
+/.idea/encodings.xml
+/.idea/fspoItmoService.iml
+/.idea/jarRepositories.xml
+/.idea/jpa-buddy.xml
+/.idea/misc.xml
+/.idea/modules.xml
