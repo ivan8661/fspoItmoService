@@ -1,10 +1,16 @@
 package com.fspoitmo.fspoitmo.Controllers;
 
 
+import com.fspoitmo.fspoitmo.Constants;
+import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.ScheduleUpdate;
 import com.fspoitmo.fspoitmo.Entities.News;
+import com.fspoitmo.fspoitmo.Entities.Repositories.ScheduleUpdateRepository;
+import com.fspoitmo.fspoitmo.Exceptions.UserException;
+import com.fspoitmo.fspoitmo.Exceptions.UserExceptionType;
 import com.fspoitmo.fspoitmo.FspoItmoApplication;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +21,28 @@ import java.util.LinkedList;
 @RestController
 @ControllerAdvice
 public class UniversityInfoController {
+
+    private final ScheduleUpdateRepository scheduleUpdateRepository;
+
+    @Autowired
+    public UniversityInfoController(ScheduleUpdateRepository scheduleUpdateRepository) {
+        this.scheduleUpdateRepository = scheduleUpdateRepository;
+    }
     
     @GetMapping("/universityInfo")
-    public ResponseEntity<String> universityInfo() throws JSONException {
+    public ResponseEntity<String> universityInfo() throws JSONException, UserException {
+
+        ScheduleUpdate scheduleUpdate = scheduleUpdateRepository.findByName(Constants.schedSyncDateConst);
+        if(scheduleUpdate == null)
+            throw new UserException(UserExceptionType.OBJECT_NOT_FOUND);
 
         JSONObject universityInfo = new JSONObject();
 
         universityInfo.put("_id", "FSPOITMO");
         universityInfo.put("name", "ФСПО ИТМО");
-        universityInfo.put("serviceName", "fspo.ifmo");
-        universityInfo.put("referenceDate", FspoItmoApplication.SYNC_TIME);
-        universityInfo.put("referenceWeek", FspoItmoApplication.CURRENT_WEEK);
+        universityInfo.put("serviceName", Constants.serviceName);
+        universityInfo.put("referenceDate", scheduleUpdate.getSyncTime());
+        universityInfo.put("referenceWeek", scheduleUpdate.getWeek());
 
         return ResponseEntity.ok().body(universityInfo.toString());
     }

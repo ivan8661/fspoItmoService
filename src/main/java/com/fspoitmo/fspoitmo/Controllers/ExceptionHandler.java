@@ -1,6 +1,5 @@
 package com.fspoitmo.fspoitmo.Controllers;
 
-import com.fspoitmo.fspoitmo.Exceptions.ErrorResult;
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
 import com.fspoitmo.fspoitmo.Exceptions.UserExceptionType;
 import org.springframework.http.HttpStatus;
@@ -18,12 +17,12 @@ import java.util.HashMap;
 public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(UserException.class)
-    protected ResponseEntity<ErrorResult> handleUserException(UserException ex) {
-        return new ResponseEntity<>(new ErrorResult(ex), ex.getHttpStatus());
+    protected ResponseEntity<UserException> handleUserException(UserException ex) {
+        return new ResponseEntity<>(ex, ex.getHttpStatus());
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(NoHandlerFoundException.class)
-    protected ResponseEntity<ErrorResult> handleFoundException(NoHandlerFoundException exception) {
+    protected ResponseEntity<UserException> handleFoundException(NoHandlerFoundException exception) {
         // Костыль чтоб не словить пустой ответ из-за ошибки сериализации
         HashMap<String, Object> debugInfo = new HashMap<>();
         debugInfo.put("message", exception.getMessage());
@@ -34,7 +33,7 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(ServerErrorException.class)
-    protected ResponseEntity<ErrorResult> handleInternalErrorException(ServerErrorException exception) {
+    protected ResponseEntity<UserException> handleInternalErrorException(ServerErrorException exception) {
         // Костыль чтоб не словить пустой ответ из-за ошибки сериализации
         HashMap<String, Object> debugInfo = new HashMap<>();
         debugInfo.put("message", exception.getMessage());
@@ -46,7 +45,7 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(NoSuchFieldException.class)
-    protected ResponseEntity<ErrorResult> handleNoSuchFieldException(NoSuchFieldException exception) {
+    protected ResponseEntity<UserException> handleNoSuchFieldException(NoSuchFieldException exception) {
         // Костыль чтоб не словить пустой ответ из-за ошибки сериализации
         HashMap<String, Object> debugInfo = new HashMap<>();
         debugInfo.put("message", exception.getMessage());
@@ -58,7 +57,7 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(HttpClientErrorException.BadRequest.class)
-    protected ResponseEntity<ErrorResult> handleBadRequestException(HttpClientErrorException exception) {
+    protected ResponseEntity<UserException> handleBadRequestException(HttpClientErrorException exception) {
         // Костыль чтоб не словить пустой ответ из-за ошибки сериализации
         HashMap<String, Object> debugInfo = new HashMap<>();
         debugInfo.put("message", exception.getMessage());
@@ -69,7 +68,7 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResult> handleOtherException(Exception exception) {
+    protected ResponseEntity<UserException> handleOtherException(Exception exception) {
         // Костыль чтоб не словить пустой ответ из-за ошибки сериализации
         HashMap<String, Object> debugInfo = new HashMap<>();
         debugInfo.put("message", exception.getMessage());

@@ -14,6 +14,4 @@ public interface SubjectRepository extends CrudRepository<Subject, String> {
     List<Subject> findByName(String name);
 
     Optional<Subject> findById(String id);
-
-    Subject findBySubjectUniversityId(Integer id);
 }

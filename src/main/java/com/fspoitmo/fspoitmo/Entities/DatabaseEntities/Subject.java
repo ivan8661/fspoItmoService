@@ -19,9 +19,6 @@ public class Subject {
     @SearchableField
     private String name;
 
-    @Column(name="subject_university_id")
-    private String subjectUniversityId;
-
     @OneToMany
     @JoinColumn(name = "subject_id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -34,10 +31,9 @@ public class Subject {
 
     }
 
-    public Subject(String id, String name, String subjectUniversityId) {
+    public Subject(String id, String name) {
         this.id = id;
         this.name = name;
-        this.subjectUniversityId = subjectUniversityId;
     }
 
     public String getId() {
@@ -50,14 +46,6 @@ public class Subject {
 
     public String getName() {
         return name;
-    }
-
-    public String getSubjectUniversityId() {
-        return subjectUniversityId;
-    }
-
-    public void setSubjectUniversityId(String subjectUniversityId) {
-        this.subjectUniversityId = subjectUniversityId;
     }
 
     public void setName(String name) {
