@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.fspoitmo.fspoitmo.Services.FSPOITMOUtils.getFSPOEven;
 
@@ -163,19 +165,56 @@ public class ImportService {
     }
 
 
-    private void addGroupSave(PupilGroup pupilGroup, JSONObject weekDay, JSONObject period, JSONObject lesson, String sNumberLesson, String week, String type) throws JSONException {
-        String nsp = lesson.optString("lastname") + " " + lesson.optString("firstname") + " " + lesson.optString("middlename");
-        Lesson lesson1 = lessonRepository.save(new Lesson(DigestUtils.sha256Hex(lesson.getString("name") + nsp + lesson.getInt("group_part") + weekDay.getString("weekday") + period.getInt("period") + "ФСПО ИТМО" + week),
-                period.optString("period_start"),
-                period.optString("period_end"),
-                Integer.parseInt(sNumberLesson),
-                FSPOITMOUtils.getFSPOday(weekDay.optString("weekday")),
-                lesson.optString("place"),
-                "practice",
-                new Subject(DigestUtils.sha256Hex(lesson.getString("name")+"fspo_itmo_subjects"), lesson.optString("name")),
-                professorsRepository.findByName(nsp),
-                Collections.singleton(pupilGroupRepository.findPupilGroupByName(pupilGroup.getName())),
-                week));
+    private void addGroupSave(PupilGroup pupilGroup, JSONObject weekDay, JSONObject period, JSONObject lessonJson, String sNumberLesson, String week, String type) throws JSONException {
+        String nsp = lessonJson.optString("lastname") + " " + lessonJson.optString("firstname") + " " + lessonJson.optString("middlename");
+        String id = DigestUtils.sha256Hex(nsp + weekDay.getString("weekday") + period.getInt("period") + "ФСПО ИТМО" + week);
 
+        Lesson lesson = lessonRepository.findById(id).orElse(new Lesson());
+
+        lesson.setId(id);
+        lesson.setStartTime(period.optString("period_start"));
+        lesson.setEndTime(period.optString("period_end"));
+        lesson.setLessonNum(Integer.parseInt(sNumberLesson));
+        lesson.setDay(FSPOITMOUtils.getFSPOday(weekDay.optString("weekday")));
+        if( lesson.getRooms() == null ){
+            lesson.setRooms(lessonJson.optString("place"));
+        }
+        else if (lesson.getRooms().isEmpty()) {
+            lesson.setRooms(lessonJson.optString("place"));
+        }
+        else if (!lesson.getRooms().contains(lessonJson.optString("place"))){
+            lesson.setRooms(lesson.getRooms() + ", " + lessonJson.optString("place"));
+        }
+        lesson.setSubject(new Subject(DigestUtils.sha256Hex(lessonJson.getString("name")+"fspo_itmo_subjects"), lessonJson.optString("name")));
+
+        if (lessonJson.getString("name") == null) {
+            lesson.setType("practice");
+        } else if (lessonJson.getString("name").toLowerCase().contains("прак")) {
+            lesson.setType("practice");
+        } else if (lessonJson.getString("name").toLowerCase().contains("курс")) {
+            lesson.setType("course");
+        } else if (lessonJson.getString("name").toLowerCase().contains("курс")) {
+            lesson.setType("practice");
+        }
+
+        Set<Professor> professors = lesson.getProfessors();
+        if (professors == null ) professors = new HashSet<>();
+        for( Professor p : professorsRepository.findByName(nsp) ) {
+            if(!professors.contains(p)) {
+                professors.add(p);
+            }
+        }
+        lesson.setProfessors(professors);
+
+        Set<PupilGroup> groups = lesson.getGroups();
+        if (groups == null ) groups = new HashSet<>();
+        PupilGroup group = pupilGroupRepository.findPupilGroupByName(pupilGroup.getName());
+        if( group != null && !groups.contains(group)) {
+            groups.add(group);
+        }
+        lesson.setGroups(groups);
+        lesson.setWeek(week);
+
+        lessonRepository.save(lesson);
     }
 }
