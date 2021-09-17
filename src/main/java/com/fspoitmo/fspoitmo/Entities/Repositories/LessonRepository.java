@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LessonRepository extends CrudRepository<Lesson, String> {
@@ -19,4 +20,5 @@ public interface LessonRepository extends CrudRepository<Lesson, String> {
 
     List<Lesson> getAllByProfessors(Professor professor);
 
+    Optional<Lesson> findById(String id);
 }
