@@ -34,7 +34,7 @@ public enum UserExceptionType {
             case OBJECT_NOT_FOUND: return HttpStatus.NOT_FOUND;
             case FORBIDDEN: return HttpStatus.FORBIDDEN;
             case BAD_REQUEST: return HttpStatus.BAD_REQUEST;
-            case VALIDATION_ERROR: return HttpStatus.INTERNAL_SERVER_ERROR;
+            case VALIDATION_ERROR: return HttpStatus.BAD_REQUEST;
             default: return HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }

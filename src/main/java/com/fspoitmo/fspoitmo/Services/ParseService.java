@@ -88,7 +88,7 @@ public class ParseService {
         entity = new HttpEntity(userData, headers);
         ResponseEntity<String> mainPage = new RestTemplate().exchange("https://ifspo.ifmo.ru/profile", HttpMethod.GET, entity, String.class);
         if(mainPage.toString().contains("Disallowed Key Characters"))
-            throw new UserException(UserExceptionType.VALIDATION_ERROR);
+            throw new UserException(UserExceptionType.VALIDATION_ERROR, "Неверный логин или пароль");
 
         System.out.println("итого:" + mainPage.getBody());
         return mainPage.getBody();
