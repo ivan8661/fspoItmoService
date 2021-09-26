@@ -1,7 +1,7 @@
 version: "3"
 services:
   fspoitmo:
-    image: schedapp/fspoitmo:latest
+    image: docker.poltorakov.ru/schedapp/fspoitmo:latest
     restart: on-failure
     environment:
       - WAIT_HOSTS=mysql:3307
