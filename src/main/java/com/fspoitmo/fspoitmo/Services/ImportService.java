@@ -144,18 +144,18 @@ public class ImportService {
                             }
                         } else if(lesson.getInt("group_part") == 1){
                             if(getFSPOEven(lesson.optString("even"), lesson.optString("odd")) == null) {
-                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "odd", "1 подгруппа");
-                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "even", "1 подгруппа");
+                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "odd", "1 подгруппа " + group.getName());
+                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "even", "1 подгруппа " + group.getName());
                             } else {
-                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  getFSPOEven(lesson.optString("even"), lesson.optString("odd")), "1 подгруппа");
+                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  getFSPOEven(lesson.optString("even"), lesson.optString("odd")), "1 подгруппа " + group.getName());
                             }
 
                         } else if(lesson.getInt("group_part") == 2) {
                             if(getFSPOEven(lesson.optString("even"), lesson.optString("odd")) == null) {
-                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "even", "2 подгруппа");
-                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "odd", "2 подгруппа");
+                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "even", "2 подгруппа " + group.getName());
+                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  "odd", "2 подгруппа " + group.getName());
                             } else {
-                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  getFSPOEven(lesson.optString("even"), lesson.optString("odd")), "2 подгруппа");
+                                addGroupSave(group, weekDay, period, lesson, sNumberLesson,  getFSPOEven(lesson.optString("even"), lesson.optString("odd")), "2 подгруппа " + group.getName());
                             }
                         }
                     }
@@ -200,16 +200,14 @@ public class ImportService {
         Set<Professor> professors = lesson.getProfessors();
         if (professors == null ) professors = new HashSet<>();
         for( Professor p : professorsRepository.findByName(nsp) ) {
-            if(!professors.contains(p)) {
-                professors.add(p);
-            }
+            professors.add(p);
         }
         lesson.setProfessors(professors);
 
         Set<PupilGroup> groups = lesson.getGroups();
         if (groups == null ) groups = new HashSet<>();
         PupilGroup group = pupilGroupRepository.findPupilGroupByName(pupilGroup.getName());
-        if( group != null && !groups.contains(group)) {
+        if(group != null) {
             groups.add(group);
         }
         lesson.setGroups(groups);
