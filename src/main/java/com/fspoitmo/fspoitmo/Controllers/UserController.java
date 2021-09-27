@@ -1,6 +1,7 @@
 package com.fspoitmo.fspoitmo.Controllers;
 
 
+import com.fspoitmo.fspoitmo.Entities.User;
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
 import com.fspoitmo.fspoitmo.Services.AuthorizationService;
 import org.json.JSONException;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<String> regUser(@RequestBody String regData) throws JSONException, UserException {
+    public ResponseEntity<User> regUser(@RequestBody String regData) throws JSONException, UserException {
         return ResponseEntity.ok().body(authorizationService.regFSPOITMOUser(regData));
     }
 }

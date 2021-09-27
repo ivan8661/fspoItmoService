@@ -3,6 +3,7 @@ package com.fspoitmo.fspoitmo.Services;
 
 import com.fspoitmo.fspoitmo.Entities.DatabaseEntities.PupilGroup;
 import com.fspoitmo.fspoitmo.Entities.Repositories.PupilGroupRepository;
+import com.fspoitmo.fspoitmo.Entities.User;
 import com.fspoitmo.fspoitmo.Exceptions.UserException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONException;
@@ -25,7 +26,7 @@ public class AuthorizationService {
         this.pupilGroupRepository = pupilGroupRepository;
     }
 
-    public String regFSPOITMOUser(String regData) throws JSONException, UserException {
+    public User regFSPOITMOUser(String regData) throws JSONException, UserException {
 
         JSONObject reg = new JSONObject(regData);
         String login = reg.optString("serviceLogin");
@@ -40,21 +41,18 @@ public class AuthorizationService {
         String id = parseService.getId();
         String avatarURL = parseService.getAvatar();
 
-
-        JSONObject user = new JSONObject();
-
-        user.put("_id", DigestUtils.sha256Hex(login));
-        user.put("serviceLogin", login);
-        user.put("servicePassword", password);
-        user.put("lastname", lastName);
-        user.put("firstname", firstName);
-        user.put("universityId", "FSPOITMO");
+        String groupId = null;
         if(pupilGroupRepository.findPupilGroupByName(numberGroup)!=null) {
-            PupilGroup pupilGroup = pupilGroupRepository.findPupilGroupByName(numberGroup);
-            user.put("groupId", pupilGroup.getId());
-            user.put("groupName", pupilGroup.getName());
+            groupId = pupilGroupRepository.findPupilGroupByName(numberGroup).getId();
         }
 
-        return user.toString();
+        return new User(
+                firstName,
+                lastName,
+                avatarURL,
+                id,
+                null,
+                groupId
+        );
     }
 }
